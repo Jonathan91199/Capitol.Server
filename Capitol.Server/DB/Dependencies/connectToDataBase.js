@@ -1,4 +1,5 @@
 let mySql = require('mysql')
+let colors = require('colors')
 
 const MY_SQL_HOSTNAME = "localhost"
 const MY_SQL_USER = "root"
@@ -13,8 +14,13 @@ module.exports = function connectToDataBase() {
 
     connection.connect(function (err) {
         if (err) throw err
-        console.log("Connected To DataBase")
-
+        console.log(colors.inverse("*** Connected To Capitol DataBase ***"))
+        connection.query("CREATE DATABASE IF NOT EXISTS CapitolDataBase", function (err, result) {
+            if (err) throw err;
+            colors.inverse("***DataBase Created ***");
+          });
     })
+
+    return connection
 }
 
