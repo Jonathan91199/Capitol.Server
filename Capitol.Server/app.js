@@ -28,10 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //******************************** //
 // ********** DataBase *********** //
 //******************************** //
-const MY_SQL_HOSTNAME = "localhost"
-const MY_SQL_USER = "root"
-const MY_SQL_PASSWORD = "CapitolServer123"
-const MY_SQL_DATABASE = "CapitolDataBase"
+
 
 const DataBaseData = {
   hostName : "localhost",
@@ -40,9 +37,13 @@ const DataBaseData = {
   dataBase : "CapitolDataBase"
 }
 let dataBaseConnection = connectToDataBase(DataBaseData)
-// insertToTable(DataBaseData, "Systems", ["systemId", "systemName"], [uuid.v1(), "Test2"])
-// addColumn(DataBaseData, "systems", "Jony", 'VARCHAR(255)', 'systemName')
-// dropColumn(DataBaseData, 'systems', 'Jony')
+// **************************** //
+// ***** Manual Functions ***** //
+// **************************** //
+
+    // insertToTable(DataBaseData, "Systems", ["systemId", "systemName"], [uuid.v1(), "Test2"])
+    // addColumn(DataBaseData, "systems", "Jony", 'VARCHAR(255)', 'systemName')
+    // dropColumn(DataBaseData, 'systems', 'Jony')
 
 //******************************** //
 // ************* API ************* //
