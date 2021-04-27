@@ -3,7 +3,7 @@ let colors = require('colors')
 let createTables = require('./CreateTables/createTables')
 
 
-module.exports = function connectToDataBase(dataBase) {
+module.exports = function connectToDataBase(dataBase, callBack) {
     let connection = mySql.createConnection({
         host: dataBase.hostName,
         user: dataBase.userName,
@@ -16,12 +16,12 @@ module.exports = function connectToDataBase(dataBase) {
         connection.query(`CREATE DATABASE IF NOT EXISTS ${dataBase.dataBase}`, function (err, result) {
             if (err) throw err;
             console.log(colors.inverse("*** DataBase Created ***"))
-            createTables(dataBase)
+            // connection = createTables(dataBase)
+            callBack()
         });
         
 
     })
 
-    return connection
 }
 

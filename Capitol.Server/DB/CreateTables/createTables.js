@@ -24,4 +24,5 @@ module.exports = function createTables(dataBase) {
         createComponentAdvancedOptionsTable(connection)
         createMicroServiceTable(connection)
     })
+    return(connection)
 }   
