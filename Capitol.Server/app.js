@@ -4,16 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let uuid = require('uuid')
+let cors = require('cors')
 let connectToDataBase = require('./DB/connectToDataBase')
 let insertToTable = require('./DB/Manual/insertToTable')
 let addColumn = require('./DB/Manual/AlterTable/addColumn')
 let dropColumn = require('./DB/Manual/AlterTable/dropColumn')
+let createTables = require('./DB/CreateTables/createTables')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+let getSystems = require('./DB/DataBaseQuerys/getSystems')
 
 
 var app = express();
-
+app.use(cors())
 
 
 // view engine setup
@@ -25,25 +28,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 //******************************** //
 // ********** DataBase *********** //
 //******************************** //
 
 
 const DataBaseData = {
-  hostName : "localhost",
-  userName : "root",
-  password : "CapitolServer123",
-  dataBase : "CapitolDataBase"
+  hostName: "localhost",
+  userName: "root",
+  password: "CapitolServer123",
+  dataBase: "CapitolDataBase"
 }
-let dataBaseConnection = connectToDataBase(DataBaseData)
+let fullDataBaseConnection
+connectToDataBase(DataBaseData, () => {
+  fullDataBaseConnection = createTables(DataBaseData)
+})
 // **************************** //
 // ***** Manual Functions ***** //
 // **************************** //
 
-    // insertToTable(DataBaseData, "Systems", ["systemId", "systemName"], [uuid.v1(), "Test2"])
-    // addColumn(DataBaseData, "systems", "Jony", 'VARCHAR(255)', 'systemName')
-    // dropColumn(DataBaseData, 'systems', 'Jony')
+// insertToTable(DataBaseData, "Systems", ["systemId", "systemName"], [uuid.v1(), "Test2"])
+// addColumn(DataBaseData, "systems", "Jony", 'VARCHAR(255)', 'systemName')
+// dropColumn(DataBaseData, 'systems', 'Jony')
 
 //******************************** //
 // ************* API ************* //
@@ -51,6 +58,9 @@ let dataBaseConnection = connectToDataBase(DataBaseData)
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.get('/api/systems', (req, res) => {
+  getSystems(fullDataBaseConnection, req, res)
+})
 
 
 
