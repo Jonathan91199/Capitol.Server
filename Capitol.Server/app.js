@@ -13,6 +13,7 @@ let createTables = require('./DB/CreateTables/createTables')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 let getSystems = require('./DB/DataBaseQuerys/getSystems')
+let getSystemHeaders = require('./DB/DataBaseQuerys/getSystemHeaders')
 
 
 var app = express();
@@ -48,7 +49,7 @@ connectToDataBase(DataBaseData, () => {
 // ***** Manual Functions ***** //
 // **************************** //
 
-// insertToTable(DataBaseData, "Systems", ["systemId", "systemName"], [uuid.v1(), "Test2"])
+// insertToTable(DataBaseData, "headers", ["systemId", "headerId", "headerName"], ['1bbe8760-a5bf-11eb-81f0-6d15fe2d60bc',uuid.v1(), "DNS Server"])
 // addColumn(DataBaseData, "systems", "Jony", 'VARCHAR(255)', 'systemName')
 // dropColumn(DataBaseData, 'systems', 'Jony')
 
@@ -60,6 +61,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.get('/api/systems', (req, res) => {
   getSystems(fullDataBaseConnection, req, res)
+})
+app.get('/api/systemHeaders', (req, res) => {
+  getSystemHeaders(fullDataBaseConnection, req, res)
 })
 
 
