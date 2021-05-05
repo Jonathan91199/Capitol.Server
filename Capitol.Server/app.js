@@ -13,6 +13,7 @@ let createTables = require('./DB/CreateTables/createTables')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 let getSystems = require('./DB/DataBaseQuerys/getSystems')
+let getSystemMetaData = require('./DB/DataBaseQuerys/getSystemMetaData')
 let getSystemHeaders = require('./DB/DataBaseQuerys/getSystemHeaders')
 
 
@@ -49,7 +50,7 @@ connectToDataBase(DataBaseData, () => {
 // ***** Manual Functions ***** //
 // **************************** //
 
-// insertToTable(DataBaseData, "headers", ["systemId", "headerId", "headerName"], ['1bbe8760-a5bf-11eb-81f0-6d15fe2d60bc',uuid.v1(), "DNS Server"])
+// insertToTable(DataBaseData, "sensormetadata", ["sensorId", "systemId", "sensorName", "sensorNotes"], [uuid.v1(),'1bbe8760-a5bf-11eb-81f0-6d15fe2d60bc',"Google" , "OffLine Since 24.4.2021"])
 // addColumn(DataBaseData, "systems", "Jony", 'VARCHAR(255)', 'systemName')
 // dropColumn(DataBaseData, 'systems', 'Jony')
 
@@ -64,6 +65,9 @@ app.get('/api/systems', (req, res) => {
 })
 app.get('/api/systemHeaders', (req, res) => {
   getSystemHeaders(fullDataBaseConnection, req, res)
+})
+app.get('/api/systemMetaData', (req, res) => {
+  getSystemMetaData(fullDataBaseConnection, req, res)
 })
 
 
