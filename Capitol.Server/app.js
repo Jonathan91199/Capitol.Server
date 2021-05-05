@@ -6,17 +6,17 @@ var logger = require('morgan');
 let uuid = require('uuid')
 let cors = require('cors')
 let connectToDataBase = require('./DB/connectToDataBase')
+let Pinger = require('./Pinger/Pinger')
 let insertToTable = require('./DB/Manual/insertToTable')
 let addColumn = require('./DB/Manual/AlterTable/addColumn')
 let dropColumn = require('./DB/Manual/AlterTable/dropColumn')
 let createTables = require('./DB/CreateTables/createTables')
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 let getSystems = require('./DB/DataBaseQuerys/getSystems')
 let getSystemMetaData = require('./DB/DataBaseQuerys/getSystemMetaData')
 let getSystemHeaders = require('./DB/DataBaseQuerys/getSystemHeaders')
+let changeComponent = require('./DB/DataBaseChanges/changeComponent')
 
-
+const PING_UPDATE_TIME = 3000 //In MiliSeconds
 var app = express();
 app.use(cors())
 
@@ -44,22 +44,28 @@ const DataBaseData = {
 }
 let fullDataBaseConnection
 connectToDataBase(DataBaseData, () => {
-  fullDataBaseConnection = createTables(DataBaseData)
+  createTables(DataBaseData, (connection) => {
+    fullDataBaseConnection = connection
+    initializePinger()
+  })
 })
+
+function initializePinger() {
+  Pinger(fullDataBaseConnection, () => {
+    setTimeout(() => initializePinger(), PING_UPDATE_TIME)
+  })
+}
 // **************************** //
 // ***** Manual Functions ***** //
 // **************************** //
 
-// insertToTable(DataBaseData, "sensormetadata", ["sensorId", "systemId", "sensorName", "sensorNotes"], [uuid.v1(),'1bbe8760-a5bf-11eb-81f0-6d15fe2d60bc',"Google" , "OffLine Since 24.4.2021"])
-// addColumn(DataBaseData, "systems", "Jony", 'VARCHAR(255)', 'systemName')
-// dropColumn(DataBaseData, 'systems', 'Jony')
-
+// insertToTable(DataBaseData, "sensorcomponenttable", ["componentId", "sensorId", "headerId", "ipAddress", "isAlive"], [uuid.v1(),'0ba518d0-a902-11eb-9c68-8baf873238fc','4f8a1220-a854-11eb-9954-478719b9d960' , '125.0.0.1', true])
+// addColumn(DataBaseData, "sensorcomponenttable", "isAlive", 'BOOLEAN', 'ipAddress')
+// dropColumn(DataBaseData, 'sensorcomponenttable', 'isAlive')
 //******************************** //
 // ************* API ************* //
 //******************************** //
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.get('/api/systems', (req, res) => {
   getSystems(fullDataBaseConnection, req, res)
 })

@@ -7,7 +7,7 @@ let createSensorComponentTable = require('./Dependencies/createSensorComponentTa
 let createComponentAdvancedOptionsTable = require('./Dependencies/createComponentAdvancedOptionsTable')
 let createMicroServiceTable = require('./Dependencies/createMicroServiceTable')
 
-module.exports = function createTables(dataBase) {
+module.exports = function createTables(dataBase, callBack) {
     let connection = mySql.createConnection({
         host: dataBase.hostName,
         user: dataBase.userName,
@@ -24,5 +24,5 @@ module.exports = function createTables(dataBase) {
         createComponentAdvancedOptionsTable(connection)
         createMicroServiceTable(connection)
     })
-    return(connection)
+    callBack(connection)
 }   
